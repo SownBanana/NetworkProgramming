@@ -1,3 +1,3 @@
 ﻿  week2-DomainName.cpp
-P:\Code4Life\NetworkProgramming\week2-DomainName\week2-DomainName\week2-DomainName.cpp(19,27): warning C4018: '<': signed/unsigned mismatch
+P:\Code4Life\NetworkProgramming\week2-DomainName\week2-DomainName\week2-DomainName.cpp(23,27): warning C4018: '<': signed/unsigned mismatch
   week2-DomainName.vcxproj -> P:\Code4Life\NetworkProgramming\week2-DomainName\Debug\week2-DomainName.exe
