@@ -1,0 +1,1 @@
+﻿Dòng này sữ được gửi đến receiver.
