@@ -9,7 +9,7 @@
 #pragma comment(lib, "ws2_32")
 int main()
 {
-    WSAData wsa;
+	WSAData wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa))
 	{
 		printf_s("ERROR");
@@ -41,6 +41,10 @@ int main()
 
 		if (ret < sizeof(buf)) buf[ret] = 0;
 		printf_s("Receive: %s\n", buf);
+		gets_s(buf);
+		//fgets(buf, sizeof(buf), stdin);
+		if (strcmp(buf, "exit") == 0) break;
+		send(client, buf, sizeof(buf), 0);
 	}
 	closesocket(client);
 	WSACleanup();
@@ -49,7 +53,7 @@ int main()
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
+// Tips for Getting Started:
 //   1. Use the Solution Explorer window to add/manage files
 //   2. Use the Team Explorer window to connect to source control
 //   3. Use the Output window to see build output and other messages

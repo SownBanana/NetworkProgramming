@@ -31,7 +31,7 @@ int main()
 	}
 	FILE* f = fopen("P:\\Code4Life\\NetworkProgramming\\Client\\FileSender\\send.txt", "rb");
 	char buf[2048];
-	
+
 	int sum = 0;
 	while (true) {
 		ret = fread(buf, 1, sizeof(buf), f);
@@ -47,11 +47,10 @@ int main()
 	WSACleanup();
 }
 
-
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
+// Tips for Getting Started:
 //   1. Use the Solution Explorer window to add/manage files
 //   2. Use the Team Explorer window to connect to source control
 //   3. Use the Output window to see build output and other messages

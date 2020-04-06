@@ -28,7 +28,7 @@ int main()
 
 	SOCKET client = accept(listener, NULL, NULL);
 	char buf[2048];
-	FILE *f = fopen("P:\\Code4Life\\NetworkProgramming\\Client\\FileReceiver\\receive.txt", "wb");
+	FILE* f = fopen("P:\\Code4Life\\NetworkProgramming\\Client\\FileReceiver\\receive.txt", "wb");
 	int ret;
 	int sum = 0;
 	while (true) {
