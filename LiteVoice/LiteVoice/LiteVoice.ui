@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LiteVoiceClass</class>
+ <widget class="QMainWindow" name="LiteVoiceClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>796</width>
+    <height>588</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>LiteVoice</string>
+  </property>
+  <property name="windowOpacity">
+   <double>0.999999000000000</double>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background: #000000</string>
+  </property>
+  <property name="animated">
+   <bool>false</bool>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTabWidget" name="tabWidgetMain">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>811</width>
+      <height>551</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>SownBanana</string>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTabWidget::pane {
+  color: #fffaea;
+  background: #121212;
+  font.bold: true;
+} 
+
+QTabBar::tab {
+  size: 20px;
+  color: #fffaea;
+  background: rgb(0,43,54); 
+  width: 60px;
+  height: 60px;
+  font.bold: true;
+} 
+
+QTabBar::tab:selected { 
+  background: rgb(7,54,66); 
+}
+</string>
+    </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::West</enum>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <property name="toolTip">
+      <string/>
+     </property>
+     <attribute name="title">
+      <string>Home</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <property name="toolTip">
+      <string>Duongvat</string>
+     </property>
+     <attribute name="title">
+      <string>D</string>
+     </attribute>
+     <widget class="QScrollArea" name="viewMss">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>601</width>
+        <height>511</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: none;
+background: #121212</string>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>601</width>
+         <height>511</height>
+        </rect>
+       </property>
+       <widget class="QLineEdit" name="edtlnMess">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>450</y>
+          <width>581</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: none;
+radius: 10px;
+background: #202020;
+color: white;
+rightPadding: 20px;
+leftPadding: 20px;
+font.pixelSize: 20px;
+</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnSend">
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>450</y>
+          <width>41</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: white;</string>
+        </property>
+        <property name="text">
+         <string>Send</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QLineEdit" name="lnedtSearch">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>211</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="LiteVoice.qrc"/>
+ </resources>
+ <connections/>
+ <slots>
+  <slot>sendMess()</slot>
+  <slot>getMess()</slot>
+ </slots>
+</ui>

@@ -1,0 +1,48 @@
+{
+  "friends": [
+    {
+      "name": "Duong Klose",
+      "isBlock": 0,
+      "avatar": "none",
+      "messages": [
+        {
+          "send": "Duong Klose",
+          "content": "anh Sơn ơi",
+          "time": "12:30 18/05/2020",
+          "attach": "none"
+        },
+        {
+          "send": "Sown Banana",
+          "content": "ơi anh đây",
+          "time": "12:31 18/05/2020",
+          "attach": "none"
+        }
+      ]
+    },
+    {
+      "name": "East Litter",
+      "isBlock": 0,
+      "avatar": "none",
+      "messages": [
+        {
+          "send": "East Litter",
+          "content": "Alo",
+          "time": "12:32 18/05/2020",
+          "attach": "none"
+        },
+        {
+          "send": "Sown Banana",
+          "content": "Êi",
+          "time": "12:33 18/05/2020",
+          "attach": "none"
+        }
+      ]
+    }
+  ],
+  "group": [
+    {
+      "name": "ALL",
+      "members": [{}]
+    }
+  ]
+}
