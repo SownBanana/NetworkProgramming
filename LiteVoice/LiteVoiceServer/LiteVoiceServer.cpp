@@ -1,7 +1,4 @@
-﻿// LiteVoiceServer.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <winsock2.h>
 
 #pragma comment(lib, "ws2_32")
@@ -65,9 +62,10 @@ const char* helpP =
 "[OUT_GROUP] group_name : Leave group_name group\n"
 "[DEL_GROUP] group_name : Delete group_name\n\n"
 
-"[SEND] ALL message : Send message to all user\n"
-"[SEND] ID message : Send message to a user defined\n"
-"[SEND] GROUP GROUP_ID message : Send message to a group defined\n\n"
+"DATE TIME FORMAT \"yyyy MMMM dd@hh:mm AP\""
+"[SEND] ALL time message : Send message to all user\n"
+"[SEND] ID time message : Send message to a user defined\n"
+"[SEND] GROUP GROUP_ID time message : Send message to a group defined\n\n"
 
 "[BLOCK] ID : Block a user defined\n"
 "[UNBLOCK] ID : Unblock a user defined\n\n"
@@ -105,7 +103,7 @@ int main()
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(2699);
+	addr.sin_port = htons(9000);
 
 	SOCKET listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	bind(listener, (SOCKADDR*)&addr, sizeof(addr));
@@ -122,7 +120,7 @@ int main()
 	listen(listener, 5);
 
 	// Chap nhan ket noi va truyen nhan du lieu
-	printf_s("Waiting for client...\n");
+	printf("Waiting for clients...\n");
 	while (true) {
 		//Khai báo biến lưu trữ thông tin client kết nối đến
 		SOCKADDR_IN clientAddr;
@@ -184,9 +182,9 @@ DWORD WINAPI ServerWorkerThread(LPVOID lpParam) {
 		printf_s("Client %s:%d : %s\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), pIoData->buf);
 
 		//Cắt protocol
-		char cmd[11], stt[50], tmp[50];
+		char cmd[11], stt[50], tmp[50], time[50];
 		char sendBuf[256];
-		ret = sscanf(pIoData->buf, "%s %s %s", cmd, stt, tmp);
+		ret = sscanf(pIoData->buf, "%s %s %s %s", cmd, stt, tmp, time);
 
 		CLIENT* client = getClient(pHandle->Socket);
 
@@ -256,9 +254,6 @@ DWORD WINAPI ServerWorkerThread(LPVOID lpParam) {
 			else if (strcmp(cmd, "CONNECT") == 0) {
 				sprintf(sendBuf, "%s %s %s%s\n", connectP, errorP, "you_are_logined_with_id_", client->id);
 				send(client->client, sendBuf, strlen(sendBuf), 0);
-			}
-			//ADDFRIEND
-			else if (strcmp(cmd, "ADDFRIEND") == 0) {
 			}
 			//SEND
 			else if (strcmp(cmd, "SEND") == 0) {
@@ -724,14 +719,3 @@ CLIENT* getClient(SOCKET sock) {
 	}
 	return NULL;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started:
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

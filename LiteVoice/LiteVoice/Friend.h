@@ -14,7 +14,6 @@ class Friend :
 	public Member
 {
 public:
-	vector<Message> messages;
 	int blockStatus;
 	Friend();
 	void read(QJsonObject& aFriend);

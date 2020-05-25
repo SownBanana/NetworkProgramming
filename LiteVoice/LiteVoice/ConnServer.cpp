@@ -134,7 +134,7 @@ void ConnServer::getData() {
 		ConnServer::numGroups++;
 	}
 }
-vector <Friend> getFriendsList() {
+vector <Friend> getFriendsListJson() {
 	vector <Friend> rs;
 	QFile loadFile(QStringLiteral("P:/Code4Life/NetworkProgramming/LiteVoice/data/data.json"));
 	if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -156,7 +156,7 @@ vector <Friend> getFriendsList() {
 	}
 	return rs;
 }
-vector <Group> getGroupsList() {
+vector <Group> getGroupsListJson() {
 	vector <Group> rs;
 	QFile loadFile(QStringLiteral("P:/Code4Life/NetworkProgramming/LiteVoice/data/data.json"));
 	if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -178,4 +178,17 @@ vector <Group> getGroupsList() {
 		rs.push_back(g);
 	}
 	return rs;
+}
+
+Friend* ConnServer::getAFriend(QString name) {
+	for (int i = 0; i < friends.size(); i++) {
+		if (friends.at(i).name == name) return &friends.at(i);
+	}
+	return NULL;
+}
+Group* ConnServer::getAGroup(QString name) {
+	for (int i = 0; i < groups.size(); i++) {
+		if (groups.at(i).name == name) return &groups.at(i);
+	}
+	return NULL;
 }

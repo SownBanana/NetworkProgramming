@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>602</width>
+    <width>604</width>
     <height>523</height>
    </rect>
   </property>
@@ -27,11 +27,16 @@
 radius: 10px;
 background: #202020;
 color: #fffaea;
-font: 9pt &quot;Segoe UI&quot;;
-rightPadding: 20px;
-leftPadding: 20px;
+font: 10pt &quot;Segoe UI&quot;;
+border-radius: 15px;
+padding-left: 15px;
+padding-right: 55px;
+
 
 </string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="btnSend">
@@ -60,9 +65,43 @@ leftPadding: 20px;
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">border: none;
-background: #121212;
-font: 9pt &quot;Segoe UI&quot;;</string>
+    <string notr="true"> QScrollBar:vertical {    
+		   border: none;
+		    background: black;
+		    width:3px;
+		     margin: 0px 0px 0px 0px;
+		  }
+QScrollBar::handle:vertical {
+		    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+		    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));
+		      min-height: 0px;
+		}
+ QScrollBar::add-line:vertical {
+		    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+		    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));
+		    height: 0px;
+		    subcontrol-position: bottom;
+		    subcontrol-origin: margin;
+		}
+QScrollBar::sub-line:vertical {
+		        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+		   stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));
+		     height: 0 px;
+		     subcontrol-position: top;
+		     subcontrol-origin: margin;
+		  }
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {background: black;}
+
+QListWidget{
+			border: none;
+			bbackground: #121212;
+		} 
+QListWidget::item{border: none;} 
+
+QListWidget::item:hover{background: transparent;} 
+
+QListWidget::item:disabled{background: transparent;}
+</string>
    </property>
   </widget>
  </widget>

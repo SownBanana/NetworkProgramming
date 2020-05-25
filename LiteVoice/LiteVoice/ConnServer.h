@@ -50,9 +50,12 @@ public:
 	void static sendServer(wchar_t* buf);
 	int static receiveServer();
 
+	static Friend* getAFriend(QString name);
+	static Group* getAGroup(QString name);
+
 	SOCKET static getSocket();
-	vector <Friend> getFriendsList();
-	vector <Group> getGroupsList();
+	vector <Friend> getFriendsListJson();
+	vector <Group> getGroupsListJson();
 
 	//signals:
 	//	void static on_mess_received(char* buf);

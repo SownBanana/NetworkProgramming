@@ -67,6 +67,9 @@
     <ClCompile Include="WorkerThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ChatUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="LiteVoice.h">
@@ -87,6 +90,9 @@
     <QtMoc Include="WorkerThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ChatUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="LiteVoice.ui">
@@ -99,6 +105,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="MessageItem.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ChatUI.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

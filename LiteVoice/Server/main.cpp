@@ -1,6 +1,4 @@
-﻿// Server.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+﻿#include <QtCore/QCoreApplication>
 #include <stdio.h>
 #include <winsock2.h>
 
@@ -30,14 +28,14 @@ typedef struct CLIENT {
 } CLIENT;
 
 int numClients;
-CLIENT clients[40];
+CLIENT clients[400];
 
 int numGroups;
-CLIENT groups[40][40];
-char* groupNames[40];
+CLIENT groups[400][400];
+char* groupNames[400];
 
 int numBlocks;
-SOCKET blockList[80];  // even : block, even+1 : is blocked by even. ex: blockList[4] = 280, bloackList[5] = 300 is 300 is blocked by 280
+SOCKET blockList[800];  // even : block, even+1 : is blocked by even. ex: blockList[4] = 280, bloackList[5] = 300 is 300 is blocked by 280
 
 const char* first = "CONNECT ERROR Type [HELP] for more information.\n";
 const char* connectP = "CONNECT";
@@ -65,9 +63,10 @@ const char* helpP =
 "[OUT_GROUP] group_name : Leave group_name group\n"
 "[DEL_GROUP] group_name : Delete group_name\n\n"
 
-"[SEND] ALL message : Send message to all user\n"
-"[SEND] ID message : Send message to a user defined\n"
-"[SEND] GROUP GROUP_ID message : Send message to a group defined\n\n"
+"DATE TIME FORMAT \"yyyy MMMM dd@hh:mm AP\""
+"[SEND] ALL time message : Send message to all user\n"
+"[SEND] ID time message : Send message to a user defined\n"
+"[SEND] GROUP GROUP_ID time message : Send message to a group defined\n\n"
 
 "[BLOCK] ID : Block a user defined\n"
 "[UNBLOCK] ID : Unblock a user defined\n\n"
@@ -87,8 +86,10 @@ CLIENT* getClient(SOCKET);
 
 DWORD WINAPI ServerWorkerThread(LPVOID);
 
-int main()
+int main(int argc, char* argv[])
 {
+	QCoreApplication a(argc, argv);
+
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2, 2), &wsa);
 
@@ -122,7 +123,7 @@ int main()
 	listen(listener, 5);
 
 	// Chap nhan ket noi va truyen nhan du lieu
-	pritnf("Waiting for client...\n");
+	printf("Waiting for clients...\n");
 	while (true) {
 		//Khai báo biến lưu trữ thông tin client kết nối đến
 		SOCKADDR_IN clientAddr;
@@ -157,8 +158,9 @@ int main()
 
 	closesocket(listener);
 	WSACleanup();
-}
 
+	return a.exec();
+}
 DWORD WINAPI ServerWorkerThread(LPVOID lpParam) {
 	HANDLE CompletionPort = (HANDLE)lpParam;
 
@@ -180,13 +182,13 @@ DWORD WINAPI ServerWorkerThread(LPVOID lpParam) {
 		else if (bytesRecived < pIoData->DataBuf.len) pIoData->buf[bytesRecived] = 0;
 
 		SOCKADDR_IN clientAddr;
-		memcpy(&clientAddr, &pHandle->ClientAddr, sizeof(clientAddr));
-		printf_s("Client %s:%d : %s\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), pIoData->buf);
+		//memcpy(&clientAddr, &pHandle->ClientAddr, sizeof(clientAddr));
+		//printf_s("Client %s:%d : %s\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), pIoData->buf);
 
 		//Cắt protocol
-		char cmd[11], stt[50], tmp[50];
+		char cmd[11], stt[50], tmp[50], time[50];
 		char sendBuf[256];
-		ret = sscanf(pIoData->buf, "%s %s %s", cmd, stt, tmp);
+		ret = sscanf(pIoData->buf, "%s %s %s %s", cmd, stt, tmp, time);
 
 		CLIENT* client = getClient(pHandle->Socket);
 

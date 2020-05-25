@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QWidget>
-#include "ui_SingleChat.h"
+#include "ui_ChatUI.h"
 #include "ConnServer.h"
 #include "qlistwidget.h"
 #include "MessageItem.h"
@@ -10,25 +10,27 @@
 #include "qgridlayout.h"
 #include "qscrollbar.h"
 
-class SingleChat : public QWidget
+class ChatUI : public QWidget
 {
 	Q_OBJECT
 
 public:
-	SingleChat(QWidget* parent = Q_NULLPTR);
-	~SingleChat();
-	//Member owner;
+	ChatUI(QWidget* parent = Q_NULLPTR);
+	~ChatUI();
+
 	QString name;
 	bool isGroup;
 	vector <Member> mem;
 	void addYourMessage(Message mess);
 	void addFriendMessage(Member mem, Message mess);
+	QGridLayout* layout;
+	int messcount;
 
 private:
-	Ui::SingleChat ui;
+	Ui::ChatUI ui;
 
 private slots:
 
-	void sendMess();
+	void sendMyMess();
 	void on_avaicon_clicked(Member mem);
 };

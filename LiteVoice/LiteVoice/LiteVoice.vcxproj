@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AvatarLabel.cpp" />
+    <ClCompile Include="ChatUI.cpp" />
     <ClCompile Include="ConnectController.cpp" />
     <ClCompile Include="ConnServer.cpp" />
     <ClCompile Include="Friend.cpp" />
@@ -100,6 +101,7 @@
     <QtMoc Include="LiteVoice.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="ChatUI.ui" />
     <QtUic Include="LiteVoice.ui" />
     <QtUic Include="MessageItem.ui" />
     <QtUic Include="SingleChat.ui" />
@@ -114,6 +116,7 @@
   <ItemGroup>
     <QtMoc Include="WorkerThread.h" />
     <QtMoc Include="AvatarLabel.h" />
+    <QtMoc Include="ChatUI.h" />
     <ClInclude Include="ConnServer.h" />
     <ClInclude Include="ConnectController.h" />
     <ClInclude Include="Friend.h" />

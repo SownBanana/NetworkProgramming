@@ -10,7 +10,6 @@ class Group :
 	public Member
 {
 public:
-	vector <Message> messages;
 	vector <User> usersList;
 	int numUsers;
 	Group();

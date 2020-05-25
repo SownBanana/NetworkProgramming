@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 	ConnServer conn;
 	char buf[1024];
 	recv(conn.getClient(), buf, sizeof(buf), 0);
-	conn.sendServer("CONNECT son");
+	conn.sendServer("CONNECT SownBanana");
 
 	QApplication a(argc, argv);
 	LiteVoice w;

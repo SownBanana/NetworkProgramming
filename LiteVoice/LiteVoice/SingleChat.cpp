@@ -5,6 +5,43 @@ SingleChat::SingleChat(QWidget* parent)
 {
 	ui.setupUi(this);
 	isGroup = false;
+
+	//ui.listWidget->setStyleSheet(
+	//	" QScrollBar:vertical {    "
+	//	"     border: none;"
+	//	"     background: black;"
+	//	"     width:3px;"
+	//	"     margin: 0px 0px 0px 0px;"
+	//	"   }"
+	//	"   QScrollBar::handle:vertical {"
+	//	"    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
+	//	"    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));"
+	//	"      min-height: 0px;"
+	//	" }"
+	//	"    QScrollBar::add-line:vertical {"
+	//	"    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
+	//	"    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));"
+	//	"     height: 0px;"
+	//	"     subcontrol-position: bottom;"
+	//	"     subcontrol-origin: margin;"
+	//	"  }"
+	//	"     QScrollBar::sub-line:vertical {"
+	//	"        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
+	//	"    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));"
+	//	"      height: 0 px;"
+	//	"     subcontrol-position: top;"
+	//	"     subcontrol-origin: margin;"
+	//	"  }"
+	//	"QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {background: black;}"
+
+	//	"QListWidget{border: none;"
+	//	//"background: #121212;"
+	//	"} "
+	//	"QListWidget::item{border: none;"
+	//	//"background: #121212;"
+	//	"fontre: 9pt \"Segoe UI\";} "
+	//	"QListWidget::item:hover{background: transparent;} "
+	//	"QListWidget::item:disabled{background: transparent;}");
 }
 
 SingleChat::~SingleChat()
@@ -12,26 +49,48 @@ SingleChat::~SingleChat()
 }
 
 void SingleChat::sendMess() {
+	vector <Friend> friendsList = ConnServer::getFriends();
+
 	QString mss = ui.edtlnMess->text();
 	ui.edtlnMess->setText("");
 
+	QDateTime dt = QDateTime::currentDateTime();
+	QString dtString = QLocale("vn_VN").toString(dt, "d/MM/yyyy@hh:mm-AP");
+
+	Message message;
+	message.sender = "SownBanana";
+	message.content = mss;
+	message.attach = "";
+	message.time = dtString;
+
+	//owner.messages.push_back(message);
+	if (isGroup) {
+		ConnServer::getAGroup(name)->messages.push_back(message);
+	}
+	else {
+		ConnServer::getAFriend(name)->messages.push_back(message);
+	}
+
 	//Add your message to QListWidget
-	addYourMessage(mss, "12:30 AM");
+	addYourMessage(message);
 
 	std::string x = mss.toStdString();
+
+	char sendMessChar[sizeof(QString)];
+	memcpy(sendMessChar, &mss, sizeof(QString));
 
 	//wchar_t* x = (wchar_t*)malloc(mss.length() * sizeof(wchar_t));
 	//mss.toWCharArray(x);
 	char buf[1024];
 	//wchar_t buf[1024];
 	if (name == "ALL")
-		sprintf(buf, "SEND ALL %s", x.c_str());
+		sprintf(buf, "SEND ALL %s", sendMessChar);
 	//swprintf_s(buf, sizeof(buf), L"SEND ALL %s", x);
 	else if (isGroup)
-		sprintf(buf, "SEND GROUP %s %s", name.toStdString().c_str(), x.c_str());
+		sprintf(buf, "SEND GROUP %s %s", name.toStdString().c_str(), sendMessChar);
 	//swprintf_s(buf, sizeof(buf), L"SEND GROUP %s %s", name.toStdString().c_str(), x);
 	else
-		sprintf(buf, "SEND %s %s", name.toStdString().c_str(), x.c_str());
+		sprintf(buf, "SEND %s %s", name.toStdString().c_str(), sendMessChar);
 	//swprintf_s(buf, sizeof(buf), L"SEND %s %s", name.toStdString().c_str(), x);
 
 	ConnServer::sendServer(buf);
@@ -44,20 +103,25 @@ void SingleChat::on_avaicon_clicked(Member mem) {
 	ui.edtlnMess->setText("avatar clicked");
 }
 
-void SingleChat::addYourMessage(QString mess, QString time) {
+void SingleChat::addYourMessage(Message mess) {
 	QListWidgetItem* item = new QListWidgetItem();
+	item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
 	QWidget* mssItem = new QWidget();
 	//mssItem->setMaximumWidth(400);
-	QLabel* lblTime = new QLabel("12:32 AM");
+
+	QString time = mess.time.split("@").at(1);
+	time.replace("-", " ");
+	QLabel* lblTime = new QLabel(time);
 
 	lblTime->setStyleSheet("QLabel { color : white; }");
 	lblTime->setAlignment(Qt::AlignRight);
 
-	QLabel* txtChat = new QLabel(mess);
+	QLabel* txtChat = new QLabel(mess.content);
 	txtChat->setStyleSheet("QLabel { background: #8b8d11;"
 		" color: white;"
 		" padding: 5px;"
-		" border-radius: 6px;"
+		" border-radius: 10px;"
+		" border-bottom-right-radius: 0;"
 		" color: #fffaea;"
 		" font: 9pt \"Segoe UI\";}");
 	/*txtChat->setMaximumWidth(400);*/
@@ -75,23 +139,30 @@ void SingleChat::addYourMessage(QString mess, QString time) {
 	item->setSizeHint(mssItem->sizeHint());
 
 	ui.listWidget->addItem(item);
+	//item->setTextAlignment(0x0002);
 	ui.listWidget->setItemWidget(item, mssItem);
+	ui.listWidget->scrollToBottom();
 }
 
-void SingleChat::addFriendMessage(Member mem, QString mess, QString time) {
+void SingleChat::addFriendMessage(Member mem, Message mess) {
 	QListWidgetItem* item = new QListWidgetItem();
+	item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
 	QWidget* mssItem = new QWidget();
 
+	QString time = mess.time.split("@").at(1);
+	time.replace("-", " ");
 	QLabel* lblTime = new QLabel(time);
+	//QLabel* lblTime = new QLabel("10:31 PM");
 	//Connect signal
 	//connect(lblTime, SIGNAL(click()), this, SLOT(on_avaicon_clicked({})));
 
 	lblTime->setStyleSheet("QLabel { color : white; }");
-	QLabel* txtChat = new QLabel(mess);
+	QLabel* txtChat = new QLabel(mess.content);
 	txtChat->setStyleSheet("QLabel { background: #8b8d11;"
 		" color: white;"
 		" padding: 5px;"
-		" border-radius: 6px;"
+		" border-radius: 10px;"
+		" border-bottom-left-radius: 0;"
 		" color: #fffaea;"
 		" font: 9pt \"Segoe UI\";}");
 	txtChat->setMaximumWidth(400);
@@ -107,7 +178,7 @@ void SingleChat::addFriendMessage(Member mem, QString mess, QString time) {
 
 	ui.listWidget->addItem(item);
 	ui.listWidget->setItemWidget(item, mssItem);
-
+	ui.listWidget->scrollToBottom();
 	//Connect signal
 	//connect(txtChat, SIGNAL(clicked()), this, SLOT(on_avaicon_clicked({})));
 }
