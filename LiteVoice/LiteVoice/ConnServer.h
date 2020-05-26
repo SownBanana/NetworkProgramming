@@ -22,6 +22,7 @@ using namespace std;
 class ConnServer
 {
 	WSAData wsa;
+	static char* myname;
 	static bool isLogined;
 	static SOCKET client;
 	static vector <Group> groups;
@@ -41,12 +42,15 @@ public:
 	static char* getBuf();
 	void static getData();
 	bool static isLogin();
+	static char* getMyName();
 
 	//Setter
+	void static setMyName(char* name);
 	void static setLogined(bool stt);
 
 	bool static saveData(QString data);
 	void static sendServer(char* buf);
+	void static sendServer(char* buf, int length);
 	void static sendServer(wchar_t* buf);
 	int static receiveServer();
 

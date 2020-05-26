@@ -6,6 +6,9 @@ LiteVoice::LiteVoice(QWidget* parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+
+	ui.lnedtSearch->setText(ConnServer::getMyName());
+
 	ui.tabWidgetMain->removeTab(0);
 	ui.tabWidgetMain->removeTab(0);
 
@@ -115,14 +118,17 @@ void LiteVoice::receivedMess(QString data) {
 	User u;
 
 	if (strcmp(cmd, "MESSAGE_ALL") == 0) {
-		QString qstrmess;
-		memcpy(&qstrmess, buf + 14 + strlen(stt) + strlen(mss), sizeof(qstrmess));
+		//QString qstrrcv;
+		//int x = strlen(mss);
+		//memcpy(&qstrrcv, mss, sizeof(qstrrcv));
 
 		Message message;
 		message.sender = stt;
-		//message.content = buf + 14 + strlen(stt) + strlen(mss);
-		message.content = qstrmess;
 		message.time = mss;
+		message.content = buf + 14 + strlen(stt) + strlen(mss);
+
+		/*message.content = qstrrcv.split(" ").at(1);
+		message.time = qstrrcv.split(" ").at(0);*/
 
 		for (int i = 0; i < ConnServer::getGroups().at(0).numUsers; i++) {
 			if (ConnServer::getGroups().at(0).usersList.at(i).name == stt) {
@@ -136,13 +142,15 @@ void LiteVoice::receivedMess(QString data) {
 		ConnServer::getGroups().at(0).messages.push_back(message);
 	}
 	else if (strcmp(cmd, "MESSAGE_GROUP") == 0) {
-		QString qstrmess;
-		memcpy(&qstrmess, buf + 17 + strlen(stt) + strlen(mss) + strlen(time), sizeof(qstrmess));
+		//QString qstrmess;
+		//memcpy(&qstrmess, buf + 16 + strlen(stt) + strlen(mss), sizeof(qstrmess));
 
 		Message message;
 		message.sender = mss;
-		message.content = qstrmess;
+		message.content = buf + 17 + strlen(stt) + strlen(mss) + strlen(time);
 		message.time = time;
+
+		//message.content = qstrmess.split(" ").at(1);
 
 		Group* grp = ConnServer::getAGroup(stt);
 		grp->messages.push_back(message);
@@ -163,19 +171,24 @@ void LiteVoice::receivedMess(QString data) {
 		groupChats.at(grpIndex)->addFriendMessage(u, message);
 	}
 	else if (strcmp(cmd, "MESSAGE") == 0) {
-		QString qstrmess;
+		//QString qstrmess;
 
 		//QString tst = "Alo alo";
 		//char a[sizeof(QString)];
 		//memcpy(a, &tst, sizeof(tst));
 		//memcpy(&qstrmess, a, sizeof(qstrmess));
 
-		memcpy(&qstrmess, buf + 10 + strlen(stt) + strlen(mss), sizeof(qstrmess));
+		//memcpy(&qstrmess, buf + 9 + strlen(stt), sizeof(qstrmess));
 
 		Message message;
 		message.sender = stt;
-		message.content = qstrmess;
+
+		message.content = buf + 10 + strlen(stt) + strlen(mss);
+
 		message.time = mss;
+
+		/*message.content = qstrmess.split(" ").at(1);
+		message.time = qstrmess.split(" ").at(0);*/
 
 		Friend* frd = ConnServer::getAFriend(stt);
 		frd->messages.push_back(message);

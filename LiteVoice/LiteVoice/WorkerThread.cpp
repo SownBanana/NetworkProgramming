@@ -30,11 +30,14 @@ void WorkerThread::run() {
 			}
 		}
 		else if (strcmp(cmd, "MESSAGE_ALL") == 0 || strcmp(cmd, "MESSAGE") == 0 || strcmp(cmd, "MESSAGE_GROUP") == 0) {
-			//User* u;
-			//for (int i = 0; i < groups.at(0).numUsers; i++) {
-			//	if (groups.at(0).usersList.at(i).name == stt) {
-			//		u = &groups.at(0).usersList.at(i);
-			QString data = QString::fromUtf8(buf);
+			/*		mss[7] = 0;
+					QString x;
+					memcpy(&x, mss, 8);*/
+					//User* u;
+					//for (int i = 0; i < groups.at(0).numUsers; i++) {
+					//	if (groups.at(0).usersList.at(i).name == stt) {
+					//		u = &groups.at(0).usersList.at(i);
+			QString data = QString::fromLocal8Bit(buf);
 			emit on_mess_received(data);
 		}
 	}

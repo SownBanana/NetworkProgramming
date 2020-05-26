@@ -10,9 +10,12 @@ int main(int argc, char* argv[])
 {
 	//ConnectController conn;
 	ConnServer conn;
+	//conn.setMyName(argv[1]);
+	conn.setMyName("SownBanana");
 	char buf[1024];
 	recv(conn.getClient(), buf, sizeof(buf), 0);
-	conn.sendServer("CONNECT SownBanana");
+	sprintf(buf, "CONNECT %s", conn.getMyName());
+	conn.sendServer(buf);
 
 	QApplication a(argc, argv);
 	LiteVoice w;

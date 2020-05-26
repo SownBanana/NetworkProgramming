@@ -2,6 +2,7 @@
 
 using namespace std;
 
+char* ConnServer::myname = "";
 SOCKET ConnServer::client = 0;
 bool ConnServer::isLogined = false;
 vector <Group> ConnServer::groups = {};
@@ -24,6 +25,14 @@ SOCKET ConnServer::getClient() {
 
 char* ConnServer::getBuf() {
 	return buf;
+}
+char* ConnServer::getMyName() {
+	return myname;
+}
+
+//Setter
+void ConnServer::setMyName(char* name) {
+	myname = name;
 }
 
 ConnServer::ConnServer() {
@@ -53,6 +62,9 @@ ConnServer::~ConnServer() {
 }
 void ConnServer::sendServer(char* buf) {
 	send(client, buf, strlen(buf), 0);
+}
+void ConnServer::sendServer(char* buf, int length) {
+	send(client, buf, length, 0);
 }
 void ConnServer::sendServer(wchar_t* buf) {
 	send(client, (char*)buf, wcslen(buf) * sizeof(wchar_t), 0);

@@ -57,8 +57,10 @@ void SingleChat::sendMess() {
 	QDateTime dt = QDateTime::currentDateTime();
 	QString dtString = QLocale("vn_VN").toString(dt, "d/MM/yyyy@hh:mm-AP");
 
+	QString senddata = dtString + " " + mss;
+
 	Message message;
-	message.sender = "SownBanana";
+	message.sender = ConnServer::getMyName();
 	message.content = mss;
 	message.attach = "";
 	message.time = dtString;
@@ -74,16 +76,23 @@ void SingleChat::sendMess() {
 	//Add your message to QListWidget
 	addYourMessage(message);
 
-	std::string x = mss.toStdString();
+	std::string x = senddata.toStdString();
 
-	char sendMessChar[sizeof(QString)];
-	memcpy(sendMessChar, &mss, sizeof(QString));
+	const char* sendMessChar = x.c_str();
 
-	//wchar_t* x = (wchar_t*)malloc(mss.length() * sizeof(wchar_t));
+	//1char sendMessChar[sizeof(QString)];
+	//memcpy(sendMessChar, &sendata, sizeof(QString) * sendata.length());
+
+	//2QByteArray sendMessChar = mss.toUtf8();
+
+	//3wchar_t* x = (wchar_t*)malloc(mss.length() * sizeof(wchar_t));
 	//mss.toWCharArray(x);
 	char buf[1024];
 	//wchar_t buf[1024];
-	if (name == "ALL")
+	if (name == "ALL") /*{
+		memcpy(buf, "SEND ALL ", 9);
+		memcpy(buf + 9, sendMessChar, 8);
+	}*/
 		sprintf(buf, "SEND ALL %s", sendMessChar);
 	//swprintf_s(buf, sizeof(buf), L"SEND ALL %s", x);
 	else if (isGroup)
@@ -92,6 +101,11 @@ void SingleChat::sendMess() {
 	else
 		sprintf(buf, "SEND %s %s", name.toStdString().c_str(), sendMessChar);
 	//swprintf_s(buf, sizeof(buf), L"SEND %s %s", name.toStdString().c_str(), x);
+
+	//Message test;
+	//test.content = buf;
+	//test.time = "test@test-test";
+	//addYourMessage(test);
 
 	ConnServer::sendServer(buf);
 }
