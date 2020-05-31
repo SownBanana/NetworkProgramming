@@ -109,23 +109,26 @@ void LiteVoice::addGroupChat(SingleChat* chat) {
 void LiteVoice::addFriendChat(SingleChat* chat) {
 	friendChats.push_back(chat);
 }
-
-void LiteVoice::receivedMess(QString data) {
-	std::string x = data.toStdString();
+void LiteVoice::receivedMessReq(QString data) {
+	waitProtocol = data;
+}
+void LiteVoice::receivedMess() {
+	std::string x = waitProtocol.toStdString();
 	const char* buf = x.c_str();
 	char cmd[32], stt[32], mss[256], time[50], tmp[50];
 	int retc = sscanf(buf, "%s %s %s %s", cmd, stt, mss, time, tmp);
 	User u;
 
+	QString messContent;
+
 	if (strcmp(cmd, "MESSAGE_ALL") == 0) {
-		//QString qstrrcv;
-		//int x = strlen(mss);
-		//memcpy(&qstrrcv, mss, sizeof(qstrrcv));
+		memcpy(&messContent, WorkerThread::buf, atoi(time));
 
 		Message message;
 		message.sender = stt;
 		message.time = mss;
-		message.content = buf + 14 + strlen(stt) + strlen(mss);
+		message.content = messContent;
+		//message.content = buf + 14 + strlen(stt) + strlen(mss);
 
 		/*message.content = qstrrcv.split(" ").at(1);
 		message.time = qstrrcv.split(" ").at(0);*/

@@ -98,6 +98,8 @@ void ChatUI::addYourMessage(Message mess) {
 	layoutt->addWidget(lblTime, 1, 1);
 	layoutt->addWidget(txtChat, 2, 1);
 
+	layoutt->setAlignment(Qt::AlignRight);
+
 	/*layoutt->setAlignment(Qt::AlignRight);*/
 
 	layoutt->setSizeConstraint(QLayout::SetFixedSize);

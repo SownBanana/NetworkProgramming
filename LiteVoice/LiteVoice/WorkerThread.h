@@ -14,11 +14,15 @@ class WorkerThread : public QThread
 	Q_OBJECT
 
 public:
+	static char buf[1024];
+
+public:
 	WorkerThread();
 	~WorkerThread();
-	char buf[1024];
+	//char
 	void run();
 
 signals:
-	void on_mess_received(QString);
+	void on_messrq_received(QString);
+	void on_mess_received();
 };

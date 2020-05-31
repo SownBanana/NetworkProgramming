@@ -10,6 +10,7 @@
 #include <QGridLayout>
 #include "TabHome.h"
 #include "ConnectController.h"
+#include "WorkerThread.h"
 
 class LiteVoice : public QMainWindow
 {
@@ -18,6 +19,8 @@ class LiteVoice : public QMainWindow
 public:
 	vector <SingleChat*> groupChats;
 	vector <SingleChat*> friendChats;
+
+	QString waitProtocol;
 
 	//vector <ChatUI*> groupChats;
 	//vector <ChatUI*> friendChats;
@@ -35,5 +38,6 @@ private:
 	Ui::LiteVoiceClass ui;
 
 public slots:
-	void receivedMess(QString);
+	void receivedMessReq(QString);
+	void receivedMess();
 };

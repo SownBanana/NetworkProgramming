@@ -1,0 +1,72 @@
+{
+  "friends": [
+    {
+      "name": "DuongKlose",
+      "isBlock": 0,
+      "avatar": "none",
+      "messages": [
+        {
+          "send": "DuongKlose",
+          "content": "anh Sơn ơi",
+          "time": "12:30 18/05/2020",
+          "attach": "none"
+        },
+        {
+          "send": "SownBanana",
+          "content": "ơi anh đây",
+          "time": "12:31 18/05/2020",
+          "attach": "none"
+        }
+      ]
+    },
+    {
+      "name": "EastLitter",
+      "isBlock": 0,
+      "avatar": "none",
+      "messages": [
+        {
+          "send": "EastLitter",
+          "content": "Alo",
+          "time": "12:32 18/05/2020",
+          "attach": "none"
+        },
+        {
+          "send": "SownBanana",
+          "content": "Êi",
+          "time": "12:33 18/05/2020",
+          "attach": "none"
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "ALL",
+      "avatar": "none",
+      "members": [
+        {
+          "name": "SownBanana",
+          "role": "admin"
+        },
+        {
+          "name": "DuongKlose",
+          "role": "member"
+        }
+      ],
+      "messages": [
+        {
+          "send": "DuongKlose",
+          "content": "Alo Group day ha",
+          "time": "12:32 18/05/2020",
+          "attach": "none"
+        },
+        {
+          "send": "SownBanana",
+          "content": "group day",
+          "time": "12:33 18/05/2020",
+          "attach": "none"
+        }
+      ]
+    }
+  ]
+}

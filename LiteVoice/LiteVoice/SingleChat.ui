@@ -94,7 +94,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {background: black;
 
 QListWidget{
 			border: none;
-			bbackground: #121212;
+			qlistwdgbackground: #121212;
+			border-radius: 10px;
 		} 
 QListWidget::item{border: none;} 
 

@@ -26,7 +26,8 @@ int main(int argc, char* argv[])
 
 	//QObject::connect(&conn, ConnServer::on_mess_received, &w, LiteVoice::receivedMess);
 	//CreateThread(0, 0, ConnectionThread, 0, 0, 0);
-	QObject::connect(&wt, SIGNAL(on_mess_received(QString)), &w, SLOT(receivedMess(QString)));
+	QObject::connect(&wt, SIGNAL(on_messrq_received(QString)), &w, SLOT(receivedMessReq(QString)));
+	QObject::connect(&wt, SIGNAL(on_mess_received()), &w, SLOT(receivedMess()));
 	return a.exec();
 }
 DWORD WINAPI ConnectionThread(LPVOID lpParam) {

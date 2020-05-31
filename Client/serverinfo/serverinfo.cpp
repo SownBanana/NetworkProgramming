@@ -22,7 +22,6 @@ typedef struct client_info {
 	int disk_free[10];
 } client_info;
 
-
 int main(int argc, char const* argv[])
 {
 	int port;
@@ -60,14 +59,15 @@ int main(int argc, char const* argv[])
 	char buf[sizeof(client_info)];
 	int ret;
 	//Ghi dữ liệu từ client
+	int test = sizeof(clientInfo);
 	ret = recv(client, buf, sizeof(client_info), 0);
 	memcpy(&clientInfo, buf, sizeof(client_info));
 	//In ra màn hình
-	wcout<<"\nClient name: " << clientInfo.client_name << endl;
+	wcout << "\nClient name: " << clientInfo.client_name << endl;
 	cout << "Number of Disks: " << clientInfo.number_of_disk << endl;
-	cout <<"Disk    Total Space    Free Space"<< endl;
+	cout << "Disk    Total Space    Free Space" << endl;
 	for (int i = 0; i < clientInfo.number_of_disk; i++) {
-		cout << endl << clientInfo.disk_list[i * 8] << clientInfo.disk_list[i * 8 + 2] << clientInfo.disk_list[i * 8 + 4] << "       " << clientInfo.disk_size[i] <<" GB         "<< clientInfo.disk_free[i] << " GB\n";
+		cout << endl << clientInfo.disk_list[i * 8] << clientInfo.disk_list[i * 8 + 2] << clientInfo.disk_list[i * 8 + 4] << "       " << clientInfo.disk_size[i] << " GB         " << clientInfo.disk_free[i] << " GB\n";
 	}
 	closesocket(client);
 	WSACleanup();

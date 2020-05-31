@@ -1,5 +1,5 @@
 #include "SingleChat.h"
-
+#include<QDebug>
 SingleChat::SingleChat(QWidget* parent)
 	: QWidget(parent)
 {
@@ -55,9 +55,12 @@ void SingleChat::sendMess() {
 	ui.edtlnMess->setText("");
 
 	QDateTime dt = QDateTime::currentDateTime();
-	QString dtString = QLocale("vn_VN").toString(dt, "d/MM/yyyy@hh:mm-AP");
 
-	QString senddata = dtString + " " + mss;
+	QString dtString = QLocale("vn_VN").toString(dt, "dd/MM/yyyy@hh:mm-AP");
+
+	string dtCStr = dtString.toStdString();
+
+	QString senddata = mss;
 
 	Message message;
 	message.sender = ConnServer::getMyName();
@@ -76,12 +79,14 @@ void SingleChat::sendMess() {
 	//Add your message to QListWidget
 	addYourMessage(message);
 
-	std::string x = senddata.toStdString();
+	//std::string x = senddata.toStdString();
 
-	const char* sendMessChar = x.c_str();
+	//const char* sendMessChar = x.c_str();
 
-	//1char sendMessChar[sizeof(QString)];
-	//memcpy(sendMessChar, &sendata, sizeof(QString) * sendata.length());
+	int x = sizeof(QString) * senddata.length();
+	char sendMessChar[1024];
+	//sendMessChar = new char[x];
+	memcpy(sendMessChar, &senddata, x);
 
 	//2QByteArray sendMessChar = mss.toUtf8();
 
@@ -93,8 +98,12 @@ void SingleChat::sendMess() {
 		memcpy(buf, "SEND ALL ", 9);
 		memcpy(buf + 9, sendMessChar, 8);
 	}*/
-		sprintf(buf, "SEND ALL %s", sendMessChar);
-	//swprintf_s(buf, sizeof(buf), L"SEND ALL %s", x);
+	//sprintf(buf, "SEND ALL %s", sendMessChar);
+	{
+		sprintf(buf, "SEND ALL %s %d", dtCStr.c_str(), x);
+		ConnServer::sendServer(buf);
+		ConnServer::sendServer(sendMessChar);
+	}
 	else if (isGroup)
 		sprintf(buf, "SEND GROUP %s %s", name.toStdString().c_str(), sendMessChar);
 	//swprintf_s(buf, sizeof(buf), L"SEND GROUP %s %s", name.toStdString().c_str(), x);
@@ -107,7 +116,7 @@ void SingleChat::sendMess() {
 	//test.time = "test@test-test";
 	//addYourMessage(test);
 
-	ConnServer::sendServer(buf);
+	//ConnServer::sendServer(buf);
 }
 
 //void SingleChat::receivedMess(Member mem, QString mess, QString time) {
@@ -144,15 +153,28 @@ void SingleChat::addYourMessage(Message mess) {
 	txtChat->setAlignment(Qt::AlignRight);
 
 	QGridLayout* layout = new QGridLayout();
-	layout->addWidget(lblTime, 1, 1);
-	layout->addWidget(txtChat, 2, 1);
+	layout->addWidget(lblTime, 0, 0);
+	layout->addWidget(txtChat, 1, 0);
+
+	layout->setColumnStretch(1, 600);
+
 	layout->setAlignment(Qt::AlignRight);
 	layout->setSizeConstraint(QLayout::SetFixedSize);
+
+	int left, top, right, bott;
+	QSize x = txtChat->size();
+
+	//qDebug() << x;
+	//layout->setContentsMargins(610 - txtChat->width(), 0, 0, 0);
+	//layout->getContentsMargins(&left, &top, &right, &bott);
+
 	mssItem->setLayout(layout);
+	mssItem->setFixedWidth(600);
 
 	item->setSizeHint(mssItem->sizeHint());
 
 	ui.listWidget->addItem(item);
+
 	//item->setTextAlignment(0x0002);
 	ui.listWidget->setItemWidget(item, mssItem);
 	ui.listWidget->scrollToBottom();

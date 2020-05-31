@@ -5,19 +5,11 @@
 #include <iostream>
 #include <stdio.h>
 #include <winsock2.h>
-#include <string.h>
-#include <string>
 using namespace std;
 
 #pragma comment(lib, "ws2_32")
 
-SOCKET clients[40];
-int numberOfClients;
-
 DWORD WINAPI clientThread(LPVOID);
-bool checkValidNameSyntax(char*);
-void broadcastMess(SOCKET, const char*);
-void removeClient(SOCKET);
 
 int main()
 {
@@ -27,7 +19,7 @@ int main()
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(9000);
+	addr.sin_port = htons(9090);
 
 	SOCKET listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	bind(listener, (SOCKADDR*)&addr, sizeof(addr));
@@ -35,13 +27,11 @@ int main()
 
 	// Chap nhan ket noi va truyen nhan du lieu
 	printf("Waiting for a client\n");
-	numberOfClients = 0;
+
 	while (true)
 	{
 		SOCKET client = accept(listener, NULL, NULL);
 		printf("Client arrive\n");
-
-		clients[numberOfClients++] = client;
 
 		CreateThread(0, 0, clientThread, &client, 0, 0);
 	}
@@ -55,100 +45,71 @@ DWORD WINAPI clientThread(LPVOID lpParam)
 {
 	SOCKET client = *(SOCKET*)lpParam;
 	int ret;
-	char first[256] = "Enter your name (client_id: YOUR_NAME_HERE): ";
 	char buf[256];
-	send(client, first, sizeof(first), 0);
-	ret = recv(client, buf, sizeof(buf), 0);
-	if (ret < 0) return 0;
-	if (ret < sizeof(buf)) buf[ret] = '\0';
-
-	char invalidMess[256] = "Your syntax invalid! ReEnter your name in right syntax (client_id: YOUR_NAME_HERE): ";
-	//Kiểm tra cú pháp
-	while (!checkValidNameSyntax(buf)) {
-		send(client, invalidMess, sizeof(invalidMess), 0);
+	double a;
+	double b;
+	double rs;
+	bool checkNumber = true; bool checkEr;
+	char cmd[5], as[500], bs[500], tmp[19];
+	while (true) {
+		checkNumber = true; checkEr = false;
 		ret = recv(client, buf, sizeof(buf), 0);
 		if (ret < 0) {
-			removeClient(client);
 			closesocket(client);
 			return 0;
 		}
+		//if(buf[ret - 1] == '/n')
 		if (ret < sizeof(buf)) buf[ret] = '\0';
-	}
-
-	//Đúng cú pháp - tách tên
-	char clientName[128];
-	memcpy(clientName, buf + 11, ret - 12);
-	clientName[ret - 12] = '\0';
-	//Gửi lời chào đến client
-	//Lưu tên tạm
-	string name(clientName, strlen(clientName));
-
-	string wcmess;
-	wcmess = "Welcome " + name + "\n";
-	char* charWcMess = (char*)wcmess.c_str();
-	send(client, charWcMess, strlen(charWcMess), 0);
-
-	//Gửi thông báo đến các client khác
-	string notiMess;
-	notiMess = name + " entered the chat room.\n";
-	char* charNotiMess = (char*)notiMess.c_str();
-	broadcastMess(client, charNotiMess);
-
-	while (true) {
-		ret = recv(client, buf, sizeof(buf), 0);
-		if (ret < 0) {
-			break;
+		printf("%s\n", buf);
+		ret = sscanf(buf, "%s %s %s %s", cmd, as, bs, tmp);
+		if (ret != 3) {
+			sprintf(buf, "ERROR thua du lieu dau vao\n");
+			send(client, buf, strlen(buf), 0);
 		}
-		if (ret < sizeof(buf)) buf[ret] = '\0';
-		//printf_s("%s", buf);
-		string strbuf(buf);
-		string mess = name + ": " + strbuf;
-		broadcastMess(client, mess.c_str());
-	}
-	string leaveMess = name + " leave the room\n";
-	broadcastMess(client, leaveMess.c_str());
-	removeClient(client);
-	closesocket(client);
-	return 0;
-}
-
-bool checkValidNameSyntax(char* name) {
-	const char* p = name;
-	const char* a = "client_id: ";
-	int len = strlen(a);
-	while (*p != NULL)
-	{
-		if (strlen(p) >= len)
-		{
-			if (strncmp(p, a, strlen(a)) == 0)
-			{
-				return true;
+		else {
+			for (int i = 0; i < strlen(as); i++) {
+				if (!isdigit(as[i]) && as[i] != '.') {
+					checkNumber = false;
+					sprintf(buf, "ERROR A is not a number\n");
+				}
 			}
+			for (int i = 0; i < strlen(bs); i++) {
+				if (!isdigit(bs[i]) && bs[i] != '.') {
+					checkNumber = false;
+					sprintf(buf, "ERROR B is not a number\n");
+				}
+			}
+			if (!checkNumber) {
+				send(client, buf, strlen(buf), 0);
+				continue;
+			}
+			a = atof(as);
+			b = atof(bs);
+			if (strcmp(cmd, "ADD") == 0) {
+				rs = a + b;
+			}
+			else if (strcmp(cmd, "SUB") == 0) {
+				rs = a - b;
+			}
+			else if (strcmp(cmd, "MUL") == 0) {
+				rs = a * b;
+			}
+			else if (strcmp(cmd, "DIV") == 0) {
+				if (b == 0.0) {
+					checkEr = true;
+					sprintf(buf, "ERROR divide for zero\n");
+				}
+				else {
+					rs = a / b;
+				}
+			}
+			else {
+				sprintf(buf, "ERROR operator is not supported\n");
+				checkEr = true;
+			}
+			if (!checkEr) sprintf(buf, "OK %f\n", rs);
+			send(client, buf, strlen(buf), 0);
 		}
-		else
-		{
-			break;
-		}
-		p++;
 	}
-	return false;
-}
-
-void removeClient(SOCKET client) {
-	int i;
-	for (i = 0; i < numberOfClients; i++) {
-		if (clients[i] == client) break;
-	}
-	if (i == (numberOfClients - 1)) numberOfClients -= 1;
-	else {
-		clients[i] = clients[numberOfClients - 1];
-		numberOfClients -= 1;
-	}
-}
-
-void broadcastMess(SOCKET dst, const char* mess) {
-	for (int i = 0; i <= numberOfClients; i++) {
-		if (clients[i] != dst)
-			send(clients[i], mess, strlen(mess), 0);
-	}
+	return 0;
 }
