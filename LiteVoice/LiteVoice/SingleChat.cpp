@@ -84,6 +84,7 @@ void SingleChat::sendMess() {
 	//const char* sendMessChar = x.c_str();
 
 	int x = sizeof(QString) * senddata.length();
+
 	char sendMessChar[1024];
 	//sendMessChar = new char[x];
 	memcpy(sendMessChar, &senddata, x);
@@ -94,15 +95,18 @@ void SingleChat::sendMess() {
 	//mss.toWCharArray(x);
 	char buf[1024];
 	//wchar_t buf[1024];
+	char* len = (char*)calloc(4, sizeof(char));
+	itoa(x, len, 10);
 	if (name == "ALL") /*{
 		memcpy(buf, "SEND ALL ", 9);
 		memcpy(buf + 9, sendMessChar, 8);
 	}*/
 	//sprintf(buf, "SEND ALL %s", sendMessChar);
 	{
-		sprintf(buf, "SEND ALL %s %d", dtCStr.c_str(), x);
+		sprintf(buf, "SEND ALL %s %s ", dtCStr.c_str(), len);
+		memcpy(buf + 11 + dtString.length() + strlen(len), sendMessChar, x);
 		ConnServer::sendServer(buf);
-		ConnServer::sendServer(sendMessChar);
+		//ConnServer::sendServer(sendMessChar);
 	}
 	else if (isGroup)
 		sprintf(buf, "SEND GROUP %s %s", name.toStdString().c_str(), sendMessChar);

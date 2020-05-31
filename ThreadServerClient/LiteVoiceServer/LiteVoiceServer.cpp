@@ -183,10 +183,10 @@ DWORD WINAPI ServerWorkerThread(LPVOID lpParam) {
 		}
 		CLIENT* client = getClient(pHandle->Socket);
 
-		if (isWaitMess(client->client)) {
-			removeWait(client->client);
-			broadcastMess(client->client, pIoData->buf);
-		}
+		//if (isWaitMess(client->client)) {
+		//	removeWait(client->client);
+		//	broadcastMess(client->client, pIoData->buf);
+		//}
 
 		//Xử lý dữ liệu
 		if (pIoData->buf[bytesRecived - 1] == '\n') pIoData->buf[bytesRecived - 1] = 0;
@@ -274,9 +274,11 @@ DWORD WINAPI ServerWorkerThread(LPVOID lpParam) {
 				if (ret > 2) {
 					//Gửi tất cả
 					if (strcmp(stt, "ALL") == 0) {
-						waitMess[numWait++] = client->client;
+						//waitMess[numWait++] = client->client;
 						//				MSA	ID TIME LEN
-						sprintf(sendBuf, "%s %s %s %d", messallP, client->id, pIoData->buf + 9/*, pIoData->buf + 29*/);
+						sprintf(sendBuf, "%s %s %s ", messallP, client->id, tmp, time);
+						int len = strlen(sendBuf);
+						memcpy(sendBuf + len, pIoData->buf + 30 + strlen(time), atoi(time));
 						broadcastMess(client->client, sendBuf);
 						sprintf(sendBuf, "%s %s\n", sendP, okP);
 						send(client->client, sendBuf, strlen(sendBuf), 0);

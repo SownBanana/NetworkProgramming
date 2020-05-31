@@ -34,7 +34,7 @@ void WorkerThread::run() {
 				}
 			}
 			else if (strcmp(cmd, "MESSAGE_ALL") == 0 || strcmp(cmd, "MESSAGE") == 0 || strcmp(cmd, "MESSAGE_GROUP") == 0) {
-				isWaittingMess = true;
+				//isWaittingMess = true;
 				QString data = QString::fromLocal8Bit(buf);
 				emit on_messrq_received(data);
 			}

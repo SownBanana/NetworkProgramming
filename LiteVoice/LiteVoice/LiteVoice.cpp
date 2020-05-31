@@ -111,6 +111,39 @@ void LiteVoice::addFriendChat(SingleChat* chat) {
 }
 void LiteVoice::receivedMessReq(QString data) {
 	waitProtocol = data;
+
+	std::string x = data.toStdString();
+	const char* buf = x.c_str();
+	char cmd[32], stt[32], mss[256], time[50], tmp[50];
+	int retc = sscanf(buf, "%s %s %s %s", cmd, stt, mss, time, tmp);
+	User u;
+
+	QString messContent;
+
+	if (strcmp(cmd, "MESSAGE_ALL") == 0) {
+		int len = atoi(time);
+		memcpy(&messContent, buf + 15 + strlen(stt) + strlen(mss) + strlen(time), atoi(time));
+
+		Message message;
+		message.sender = stt;
+		message.time = mss;
+		message.content = messContent;
+		//message.content = buf + 14 + strlen(stt) + strlen(mss);
+
+		/*message.content = qstrrcv.split(" ").at(1);
+		message.time = qstrrcv.split(" ").at(0);*/
+
+		for (int i = 0; i < ConnServer::getGroups().at(0).numUsers; i++) {
+			if (ConnServer::getGroups().at(0).usersList.at(i).name == stt) {
+				u = ConnServer::getGroups().at(0).usersList.at(i);
+				break;
+			}
+		}
+
+		groupChats.at(0)->addFriendMessage(u, message);
+
+		ConnServer::getGroups().at(0).messages.push_back(message);
+	}
 }
 void LiteVoice::receivedMess() {
 	std::string x = waitProtocol.toStdString();
