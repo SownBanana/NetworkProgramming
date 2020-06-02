@@ -2,9 +2,13 @@
 
 using namespace std;
 
+//ReceiveVoiceThread ConnServer::rthread;
+//SendVoiceThread ConnServer::sthread;
+
 char* ConnServer::myname = "";
 SOCKET ConnServer::client = 0;
 bool ConnServer::isLogined = false;
+bool ConnServer::isCall = false;
 vector <Group> ConnServer::groups = {};
 vector <Friend> ConnServer::friends = {};
 int ConnServer::numGroups = 0;
@@ -34,7 +38,12 @@ char* ConnServer::getMyName() {
 void ConnServer::setMyName(char* name) {
 	myname = name;
 }
-
+bool ConnServer::isCalling() {
+	return isCall;
+}
+void ConnServer::setCalling(bool stt) {
+	isCall = stt;
+}
 ConnServer::ConnServer() {
 	if (WSAStartup(MAKEWORD(2, 2), &wsa))
 	{

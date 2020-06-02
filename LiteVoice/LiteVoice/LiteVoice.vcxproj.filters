@@ -70,6 +70,12 @@
     <ClCompile Include="ChatUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SendVoiceThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReceiveVoiceThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="LiteVoice.h">
@@ -136,6 +142,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ConnectController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SendVoiceThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReceiveVoiceThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

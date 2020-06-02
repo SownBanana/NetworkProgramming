@@ -12,6 +12,8 @@
 #include "ConnectController.h"
 #include "WorkerThread.h"
 
+class SingleChat;
+
 class LiteVoice : public QMainWindow
 {
 	Q_OBJECT
@@ -31,13 +33,13 @@ public:
 	void addGroupChat(SingleChat* chat);
 	void addFriendChat(SingleChat* chat);
 
-	void addGroupChat(ChatUI* chat);
-	void addFriendChat(ChatUI* chat);
+	//void addGroupChat(ChatUI* chat);
+	//void addFriendChat(ChatUI* chat);
 
 private:
 	Ui::LiteVoiceClass ui;
 
 public slots:
-	void receivedMessReq(QString);
-	void receivedMess();
+	void receivedMessAll(QString);
+	void receivedMess(QString);
 };

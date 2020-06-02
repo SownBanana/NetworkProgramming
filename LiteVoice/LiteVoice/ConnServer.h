@@ -13,6 +13,9 @@
 #include "qfile.h"
 #include "SingleChat.h"
 
+#include "ReceiveVoiceThread.h"
+#include "SendVoiceThread.h"
+
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #pragma comment(lib, "ws2_32.lib")
@@ -31,9 +34,14 @@ class ConnServer
 	static int numFriends;
 	static char* buf;
 	static wchar_t* wbuf;
+	bool static isCall;
+
 public:
 	ConnServer();
 	~ConnServer();
+
+	//static ReceiveVoiceThread rthread;
+	//static SendVoiceThread sthread;
 
 	//getter
 	vector <Friend> static getFriends();
@@ -43,6 +51,8 @@ public:
 	void static getData();
 	bool static isLogin();
 	static char* getMyName();
+	bool static isCalling();
+	void static setCalling(bool stt);
 
 	//Setter
 	void static setMyName(char* name);

@@ -5,43 +5,7 @@ SingleChat::SingleChat(QWidget* parent)
 {
 	ui.setupUi(this);
 	isGroup = false;
-
-	//ui.listWidget->setStyleSheet(
-	//	" QScrollBar:vertical {    "
-	//	"     border: none;"
-	//	"     background: black;"
-	//	"     width:3px;"
-	//	"     margin: 0px 0px 0px 0px;"
-	//	"   }"
-	//	"   QScrollBar::handle:vertical {"
-	//	"    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
-	//	"    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));"
-	//	"      min-height: 0px;"
-	//	" }"
-	//	"    QScrollBar::add-line:vertical {"
-	//	"    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
-	//	"    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));"
-	//	"     height: 0px;"
-	//	"     subcontrol-position: bottom;"
-	//	"     subcontrol-origin: margin;"
-	//	"  }"
-	//	"     QScrollBar::sub-line:vertical {"
-	//	"        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
-	//	"    stop: 0 rgb(32, 32, 32), stop: 0.5 rgb(32, 32, 32), stop:1 rgb(32, 32, 32));"
-	//	"      height: 0 px;"
-	//	"     subcontrol-position: top;"
-	//	"     subcontrol-origin: margin;"
-	//	"  }"
-	//	"QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {background: black;}"
-
-	//	"QListWidget{border: none;"
-	//	//"background: #121212;"
-	//	"} "
-	//	"QListWidget::item{border: none;"
-	//	//"background: #121212;"
-	//	"fontre: 9pt \"Segoe UI\";} "
-	//	"QListWidget::item:hover{background: transparent;} "
-	//	"QListWidget::item:disabled{background: transparent;}");
+	isCalling = false;
 }
 
 SingleChat::~SingleChat()
@@ -52,6 +16,7 @@ void SingleChat::sendMess() {
 	vector <Friend> friendsList = ConnServer::getFriends();
 
 	QString mss = ui.edtlnMess->text();
+	if (mss == "") return;
 	ui.edtlnMess->setText("");
 
 	QDateTime dt = QDateTime::currentDateTime();
@@ -60,7 +25,7 @@ void SingleChat::sendMess() {
 
 	string dtCStr = dtString.toStdString();
 
-	QString senddata = mss;
+	//QString senddata = mss;
 
 	Message message;
 	message.sender = ConnServer::getMyName();
@@ -83,44 +48,32 @@ void SingleChat::sendMess() {
 
 	//const char* sendMessChar = x.c_str();
 
-	int x = sizeof(QString) * senddata.length();
+	//here
+	//int x = sizeof(QString) * senddata.length();
 
-	char sendMessChar[1024];
-	//sendMessChar = new char[x];
-	memcpy(sendMessChar, &senddata, x);
+	//char sendMessChar[1024];
 
-	//2QByteArray sendMessChar = mss.toUtf8();
+	//memcpy(sendMessChar, &senddata, x);
+	//here
 
-	//3wchar_t* x = (wchar_t*)malloc(mss.length() * sizeof(wchar_t));
-	//mss.toWCharArray(x);
+	string mssStr = mss.toStdString();
+	string nameStr = name.toStdString();
 	char buf[1024];
+	memset(buf, 0, 1024);
 	//wchar_t buf[1024];
-	char* len = (char*)calloc(4, sizeof(char));
-	itoa(x, len, 10);
-	if (name == "ALL") /*{
-		memcpy(buf, "SEND ALL ", 9);
-		memcpy(buf + 9, sendMessChar, 8);
-	}*/
-	//sprintf(buf, "SEND ALL %s", sendMessChar);
-	{
-		sprintf(buf, "SEND ALL %s %s ", dtCStr.c_str(), len);
-		memcpy(buf + 11 + dtString.length() + strlen(len), sendMessChar, x);
+	//char* lenmss = (char*)calloc(4, sizeof(char));
+	//itoa(x, lenmss, 10);
+	if (name == "ALL") {
+		sprintf(buf, "SEND ALL %s %s", dtCStr.c_str(), mssStr.c_str());
 		ConnServer::sendServer(buf);
-		//ConnServer::sendServer(sendMessChar);
 	}
-	else if (isGroup)
-		sprintf(buf, "SEND GROUP %s %s", name.toStdString().c_str(), sendMessChar);
-	//swprintf_s(buf, sizeof(buf), L"SEND GROUP %s %s", name.toStdString().c_str(), x);
-	else
-		sprintf(buf, "SEND %s %s", name.toStdString().c_str(), sendMessChar);
-	//swprintf_s(buf, sizeof(buf), L"SEND %s %s", name.toStdString().c_str(), x);
-
-	//Message test;
-	//test.content = buf;
-	//test.time = "test@test-test";
-	//addYourMessage(test);
-
-	//ConnServer::sendServer(buf);
+	else if (isGroup) {
+		sprintf(buf, "SEND GROUP %s %s %s", nameStr.c_str(), dtCStr.c_str(), mssStr.c_str());
+		ConnServer::sendServer(buf);
+	}
+	else {
+		sprintf(buf, "SEND %s %s %s", nameStr.c_str(), dtCStr.c_str(), mssStr.c_str());
+	}
 }
 
 //void SingleChat::receivedMess(Member mem, QString mess, QString time) {
@@ -221,4 +174,26 @@ void SingleChat::addFriendMessage(Member mem, Message mess) {
 	ui.listWidget->scrollToBottom();
 	//Connect signal
 	//connect(txtChat, SIGNAL(clicked()), this, SLOT(on_avaicon_clicked({})));
+}
+
+void SingleChat::makeCall() {
+	if (!ConnServer::isCalling) {
+		isCalling = true;
+		ConnServer::setCalling(true);
+		char buf[256];
+		string nameStr = name.toStdString();
+		sprintf(buf, "CALL %s %s", nameStr.c_str(), "9090");
+		ConnServer::sendServer(buf);
+		//rthread.start();
+	}
+}
+void SingleChat::cancelCall() {
+	if (ConnServer::isCalling) {
+		isCalling = true;
+		ConnServer::setCalling(false);
+		char buf[256];
+		string nameStr = name.toStdString();
+		sprintf(buf, "CALL %s %s", nameStr.c_str(), "9090");
+		//rthread.terminate();
+	}
 }

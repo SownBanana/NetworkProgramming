@@ -92,6 +92,8 @@
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MessageItem.cpp" />
+    <ClCompile Include="ReceiveVoiceThread.cpp" />
+    <ClCompile Include="SendVoiceThread.cpp" />
     <ClCompile Include="SingleChat.cpp" />
     <ClCompile Include="TabHome.cpp" />
     <ClCompile Include="User.cpp" />
@@ -125,6 +127,8 @@
     <ClInclude Include="Message.h" />
     <QtMoc Include="TabHome.h" />
     <QtMoc Include="MessageItem.h" />
+    <ClInclude Include="ReceiveVoiceThread.h" />
+    <ClInclude Include="SendVoiceThread.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>

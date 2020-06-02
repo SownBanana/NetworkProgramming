@@ -24,5 +24,6 @@ public:
 
 signals:
 	void on_messrq_received(QString);
-	void on_mess_received();
+	void on_mess_all_received(QString);
+	void on_mess_received(QString);
 };

@@ -79,6 +79,7 @@ const char* helpP =
 
 bool checkValidNameSyntax(char*);
 void broadcastMess(SOCKET, const char*);
+void broadcastMess(SOCKET, const char*, int);
 void removeClient(SOCKET);
 int checkBlock(SOCKET, SOCKET);
 bool unBlock(SOCKET, SOCKET);
@@ -276,9 +277,16 @@ DWORD WINAPI ServerWorkerThread(LPVOID lpParam) {
 					if (strcmp(stt, "ALL") == 0) {
 						//waitMess[numWait++] = client->client;
 						//				MSA	ID TIME LEN
-						sprintf(sendBuf, "%s %s %s ", messallP, client->id, tmp, time);
+						/*sprintf(sendBuf, "%s %s %s %s ", messallP, client->id, tmp, time);
 						int len = strlen(sendBuf);
-						memcpy(sendBuf + len, pIoData->buf + 30 + strlen(time), atoi(time));
+						int msslen = atoi(time);
+						memcpy(sendBuf + len, pIoData->buf + 30 + strlen(time), msslen);
+						broadcastMess(client->client, sendBuf, len + msslen);
+						sprintf(sendBuf, "%s %s\n", sendP, okP);
+						send(client->client, sendBuf, strlen(sendBuf), 0);*/
+
+						sprintf(sendBuf, "%s %s %s", messallP, client->id, pIoData->buf + 10);
+
 						broadcastMess(client->client, sendBuf);
 						sprintf(sendBuf, "%s %s\n", sendP, okP);
 						send(client->client, sendBuf, strlen(sendBuf), 0);
@@ -696,6 +704,12 @@ void broadcastMess(SOCKET dst, const char* mess) {
 	for (int i = 0; i <= numClients; i++) {
 		if (clients[i].client != dst && clients[i].isLogin && !checkBlock(dst, clients[i].client))
 			send(clients[i].client, mess, strlen(mess), 0);
+	}
+}
+void broadcastMess(SOCKET dst, const char* mess, int length) {
+	for (int i = 0; i <= numClients; i++) {
+		if (clients[i].client != dst && clients[i].isLogin && !checkBlock(dst, clients[i].client))
+			send(clients[i].client, mess, length, 0);
 	}
 }
 

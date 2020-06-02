@@ -109,62 +109,54 @@ void LiteVoice::addGroupChat(SingleChat* chat) {
 void LiteVoice::addFriendChat(SingleChat* chat) {
 	friendChats.push_back(chat);
 }
-void LiteVoice::receivedMessReq(QString data) {
-	waitProtocol = data;
-
+void LiteVoice::receivedMessAll(QString data) {
+	//waitProtocol = data;
 	std::string x = data.toStdString();
 	const char* buf = x.c_str();
 	char cmd[32], stt[32], mss[256], time[50], tmp[50];
 	int retc = sscanf(buf, "%s %s %s %s", cmd, stt, mss, time, tmp);
+
+	/*QStringList ldata = data.split(" ");
+	QString messContent = data.split("|")[1];*/
+
 	User u;
 
-	QString messContent;
+	Message message;
+	message.sender = stt;
+	message.time = mss;
+	message.content = buf + 14 + strlen(stt) + strlen(mss);
+	//message.content = buf + 14 + strlen(stt) + strlen(mss);
 
-	if (strcmp(cmd, "MESSAGE_ALL") == 0) {
-		int len = atoi(time);
-		memcpy(&messContent, buf + 15 + strlen(stt) + strlen(mss) + strlen(time), atoi(time));
+	/*message.content = qstrrcv.split(" ").at(1);
+	message.time = qstrrcv.split(" ").at(0);*/
 
-		Message message;
-		message.sender = stt;
-		message.time = mss;
-		message.content = messContent;
-		//message.content = buf + 14 + strlen(stt) + strlen(mss);
-
-		/*message.content = qstrrcv.split(" ").at(1);
-		message.time = qstrrcv.split(" ").at(0);*/
-
-		for (int i = 0; i < ConnServer::getGroups().at(0).numUsers; i++) {
-			if (ConnServer::getGroups().at(0).usersList.at(i).name == stt) {
-				u = ConnServer::getGroups().at(0).usersList.at(i);
-				break;
-			}
+	for (int i = 0; i < ConnServer::getGroups().at(0).numUsers; i++) {
+		if (ConnServer::getGroups().at(0).usersList.at(i).name == stt) {
+			u = ConnServer::getGroups().at(0).usersList.at(i);
+			break;
 		}
-
-		groupChats.at(0)->addFriendMessage(u, message);
-
-		ConnServer::getGroups().at(0).messages.push_back(message);
 	}
+
+	groupChats.at(0)->addFriendMessage(u, message);
+
+	ConnServer::getGroups().at(0).messages.push_back(message);
 }
-void LiteVoice::receivedMess() {
-	std::string x = waitProtocol.toStdString();
+void LiteVoice::receivedMess(QString data) {
+	std::string x = data.toStdString();
 	const char* buf = x.c_str();
 	char cmd[32], stt[32], mss[256], time[50], tmp[50];
 	int retc = sscanf(buf, "%s %s %s %s", cmd, stt, mss, time, tmp);
+
+	/*QStringList ldata = data.split(" ");
+	QString messContent = data.split("|")[1];*/
+
 	User u;
 
-	QString messContent;
-
 	if (strcmp(cmd, "MESSAGE_ALL") == 0) {
-		memcpy(&messContent, WorkerThread::buf, atoi(time));
-
 		Message message;
 		message.sender = stt;
 		message.time = mss;
-		message.content = messContent;
-		//message.content = buf + 14 + strlen(stt) + strlen(mss);
-
-		/*message.content = qstrrcv.split(" ").at(1);
-		message.time = qstrrcv.split(" ").at(0);*/
+		message.content = buf + 14 + strlen(stt) + strlen(mss);
 
 		for (int i = 0; i < ConnServer::getGroups().at(0).numUsers; i++) {
 			if (ConnServer::getGroups().at(0).usersList.at(i).name == stt) {
@@ -178,9 +170,6 @@ void LiteVoice::receivedMess() {
 		ConnServer::getGroups().at(0).messages.push_back(message);
 	}
 	else if (strcmp(cmd, "MESSAGE_GROUP") == 0) {
-		//QString qstrmess;
-		//memcpy(&qstrmess, buf + 16 + strlen(stt) + strlen(mss), sizeof(qstrmess));
-
 		Message message;
 		message.sender = mss;
 		message.content = buf + 17 + strlen(stt) + strlen(mss) + strlen(time);
@@ -207,24 +196,12 @@ void LiteVoice::receivedMess() {
 		groupChats.at(grpIndex)->addFriendMessage(u, message);
 	}
 	else if (strcmp(cmd, "MESSAGE") == 0) {
-		//QString qstrmess;
-
-		//QString tst = "Alo alo";
-		//char a[sizeof(QString)];
-		//memcpy(a, &tst, sizeof(tst));
-		//memcpy(&qstrmess, a, sizeof(qstrmess));
-
-		//memcpy(&qstrmess, buf + 9 + strlen(stt), sizeof(qstrmess));
-
 		Message message;
 		message.sender = stt;
 
 		message.content = buf + 10 + strlen(stt) + strlen(mss);
 
 		message.time = mss;
-
-		/*message.content = qstrmess.split(" ").at(1);
-		message.time = qstrmess.split(" ").at(0);*/
 
 		Friend* frd = ConnServer::getAFriend(stt);
 		frd->messages.push_back(message);

@@ -8,38 +8,29 @@
 #include <tchar.h>
 
 #pragma comment(lib, "user32.lib")
+#pragma warning (disable:4996)
 
 using namespace std;
 
 int main()
 {
-	DWORD bufSize = 100;
-	char listDisk[100];
-	int numberofDisk = GetLogicalDriveStrings(bufSize, (LPWSTR)listDisk);
-	wchar_t disk[3];
-	__int64 avail, total, free;
-	bool checkInsert;
-	int size = numberofDisk/4;
-	int* sizeofdisk = new int[size];
-	int* freeofdisk = new int[size];
-	int index = 0;
-	for (int i = 0; i < numberofDisk * 2; i+=8) {
-		cout << listDisk[i] <<": ";
-		disk[0] = listDisk[i];
-		disk[1] = listDisk[i + 2];
-		disk[2] = 0;
-		//wcout << disk;
-		checkInsert = GetDiskFreeSpaceEx(disk, (PULARGE_INTEGER)&avail, (PULARGE_INTEGER)&total, (PULARGE_INTEGER)&free);
-		if (checkInsert) {
-			sizeofdisk[index] = total / (1024 * 1024 * 1024);
-			freeofdisk[index++] = free / (1024 * 1024 * 1024);
-		}
-		else {
-			sizeofdisk[index] = 0;
-			freeofdisk[index++] = 0;
-		}
+	FILE* fp = fopen("P:\\Test\\test.png", "rb");
+	char* buf;
+	fseek(fp, 0, SEEK_END);
+	long len = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	buf = (char*)calloc(len + 1, sizeof(char));
+	//data = (char*)calloc(len + 1, sizeof(char));
+	//int ret = fread(data, 1, len, fp);
+	//data[len] = 0;
+	int ret;
+	char data[256];
+	while (true) {
+		ret = fread(data, 1, sizeof(data), fp);
+		if (ret <= 0) break;
+		printf("%s", buf);
+		memcpy(buf + , )
 	}
-	for (int i = 0; i < size; i++) {
-		cout <<"\n"<< listDisk[i*8] << listDisk[i*8 + 2] << listDisk[i*8 + 4] << "  " << sizeofdisk[i] <<"   "<< freeofdisk[i]<< " GB";
-	}
+
+	fclose(fp);
 }

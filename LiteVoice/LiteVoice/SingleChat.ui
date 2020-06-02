@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>604</width>
+    <width>702</width>
     <height>523</height>
    </rect>
   </property>
@@ -59,9 +59,9 @@ padding-right: 55px;
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
+     <y>30</y>
      <width>601</width>
-     <height>461</height>
+     <height>431</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -105,6 +105,57 @@ QListWidget::item:disabled{background: transparent;}
 </string>
    </property>
   </widget>
+  <widget class="QListView" name="userlistView">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>30</y>
+     <width>91</width>
+     <height>471</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">borde: none;
+background: #090909;
+border-radius: 10px;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="callBtn">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>0</y>
+     <width>41</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: #202020;
+color: #fffaea;
+border-radius: 10px;</string>
+   </property>
+   <property name="text">
+    <string>Call</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="canelbtn">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>0</y>
+     <width>41</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: #202020;
+color: #fffaea;
+border-radius: 10px;</string>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
@@ -125,8 +176,42 @@ QListWidget::item:disabled{background: transparent;}
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>callBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>SingleChat</receiver>
+   <slot>makeCall()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>630</x>
+     <y>11</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>canelbtn</sender>
+   <signal>clicked()</signal>
+   <receiver>SingleChat</receiver>
+   <slot>cancelCall()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>680</x>
+     <y>11</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>sendMess()</slot>
+  <slot>makeCall()</slot>
+  <slot>cancelCall()</slot>
  </slots>
 </ui>
