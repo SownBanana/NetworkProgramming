@@ -15,6 +15,7 @@ int ConnServer::numGroups = 0;
 int ConnServer::numFriends = 0;
 char* ConnServer::buf = (char*)calloc(1024, sizeof(char));
 wchar_t* ConnServer::wbuf = (wchar_t*)calloc(1024, sizeof(wchar_t));
+char* ConnServer::serverip = "127.0.0.1";
 
 //Getter
 vector <Friend> ConnServer::getFriends() {
@@ -34,7 +35,14 @@ char* ConnServer::getMyName() {
 	return myname;
 }
 
+char* ConnServer::getServerip() {
+	return serverip;
+}
+
 //Setter
+void ConnServer::setServerip(char* ip) {
+	serverip = ip;
+}
 void ConnServer::setMyName(char* name) {
 	myname = name;
 }
@@ -53,7 +61,8 @@ ConnServer::ConnServer() {
 		client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		SOCKADDR_IN server_addr;
 		server_addr.sin_family = AF_INET;
-		server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+		//server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+		server_addr.sin_addr.s_addr = inet_addr(serverip);
 		server_addr.sin_port = htons(9000);
 		//Kết nối server
 		int ret = connect(client, (SOCKADDR*)&server_addr, sizeof(server_addr));

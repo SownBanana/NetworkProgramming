@@ -35,7 +35,7 @@ class ConnServer
 	static char* buf;
 	static wchar_t* wbuf;
 	bool static isCall;
-
+	static char* serverip;
 public:
 	ConnServer();
 	~ConnServer();
@@ -53,8 +53,10 @@ public:
 	static char* getMyName();
 	bool static isCalling();
 	void static setCalling(bool stt);
+	static char* getServerip();
 
 	//Setter
+	static void setServerip(char* ip);
 	void static setMyName(char* name);
 	void static setLogined(bool stt);
 

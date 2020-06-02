@@ -10,8 +10,9 @@ int main(int argc, char* argv[])
 {
 	//ConnectController conn;
 	ConnServer conn;
-	//conn.setMyName(argv[1]);
-	conn.setMyName("SownBanana");
+	conn.setMyName(argv[1]);
+	conn.setServerip(argv[2]);
+	//conn.setMyName("SownBanana");
 	char buf[1024];
 	recv(conn.getClient(), buf, sizeof(buf), 0);
 	sprintf(buf, "CONNECT %s", conn.getMyName());
